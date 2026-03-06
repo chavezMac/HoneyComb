@@ -1,34 +1,10 @@
 {
   "images" : [
     {
-      "idiom" : "watch",
+      "filename" : "honeycomb.png",
+      "idiom" : "universal",
       "platform" : "watchos",
-      "size" : "40x40"
-    },
-    {
-      "idiom" : "watch",
-      "platform" : "watchos",
-      "size" : "44x44"
-    },
-    {
-      "idiom" : "watch",
-      "platform" : "watchos",
-      "size" : "46x46"
-    },
-    {
-      "idiom" : "watch",
-      "platform" : "watchos",
-      "size" : "50x50"
-    },
-    {
-      "idiom" : "watch",
-      "platform" : "watchos",
-      "size" : "51x51"
-    },
-    {
-      "idiom" : "watch",
-      "platform" : "watchos",
-      "size" : "54x54"
+      "size" : "1024x1024"
     }
   ],
   "info" : {

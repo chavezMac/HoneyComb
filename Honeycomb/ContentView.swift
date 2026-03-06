@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var store: FavoritesStore
     @State private var showContactPicker = false
+    @State private var editingFavorite: Favorite?
 
     var body: some View {
         NavigationStack {
@@ -36,7 +37,14 @@ struct ContentView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            editingFavorite = favorite
+                        }
                         .contextMenu {
+                            Button("Edit color & ring") {
+                                editingFavorite = favorite
+                            }
                             Button("Mark as read") {
                                 store.markAsRead(favorite)
                             }
@@ -84,10 +92,101 @@ struct ContentView: View {
                     onCancel: { showContactPicker = false }
                 )
             }
+            .sheet(item: $editingFavorite) { favorite in
+                EditFavoriteSheet(
+                    favorite: favorite,
+                    onSave: { hexColor, ringIndex in
+                        store.setHexColor(hexColor, for: favorite.id)
+                        store.setRingIndex(ringIndex, for: favorite.id)
+                        editingFavorite = nil
+                    },
+                    onCancel: { editingFavorite = nil }
+                )
+            }
         }
+    }
+}
+
+// MARK: - Edit favorite (color & ring)
+
+struct EditFavoriteSheet: View {
+    let favorite: Favorite
+    let onSave: (String?, Int) -> Void
+    let onCancel: () -> Void
+
+    @State private var selectedColor: Color
+    @State private var useDefaultColor: Bool
+    @State private var ringIndex: Int
+
+    private let maxRing = 5
+
+    init(favorite: Favorite, onSave: @escaping (String?, Int) -> Void, onCancel: @escaping () -> Void) {
+        self.favorite = favorite
+        self.onSave = onSave
+        self.onCancel = onCancel
+        let useDefault = favorite.hexColor == nil
+        _useDefaultColor = State(initialValue: useDefault)
+        _selectedColor = State(initialValue: (favorite.hexColor.flatMap { Color(hex: $0) }) ?? .orange)
+        _ringIndex = State(initialValue: min(favorite.ringIndex, 5))
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Text(favorite.name)
+                        .font(.headline)
+                } header: {
+                    Text("Contact")
+                }
+
+                Section {
+                    Toggle("Use default color", isOn: $useDefaultColor)
+                    if !useDefaultColor {
+                        ColorPicker("Hexagon color", selection: $selectedColor, supportsOpacity: false)
+                    }
+                } header: {
+                    Text("Color")
+                } footer: {
+                    Text("Default uses the system accent on Watch.")
+                }
+
+                Section {
+                    Picker("Ring", selection: $ringIndex) {
+                        ForEach(0...maxRing, id: \.self) { index in
+                            Text(ringLabel(index)).tag(index)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                } header: {
+                    Text("Ring on Watch")
+                } footer: {
+                    Text("Ring 1 is innermost (up to 4 contacts), then Ring 2 (8), Ring 3 (12), etc.")
+                }
+            }
+            .navigationTitle("Edit bubble")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { onCancel() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        let hex = useDefaultColor ? nil : selectedColor.toHex()
+                        onSave(hex, ringIndex)
+                    }
+                }
+            }
+        }
+    }
+
+    private func ringLabel(_ index: Int) -> String {
+        if index == 0 { return "Ring 1 (inner)" }
+        return "Ring \(index + 1)"
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(FavoritesStore())
 }
