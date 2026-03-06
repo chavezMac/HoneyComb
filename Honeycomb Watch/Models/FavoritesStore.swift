@@ -67,17 +67,19 @@ final class FavoritesStore: ObservableObject {
 
     static func defaultFavorites() -> [Favorite] {
         [
-            Favorite(name: "Jordan Reed", phoneNumber: "15551234001"),
-            Favorite(name: "Sam Chen", phoneNumber: "15559876002"),
-            Favorite(name: "Alex Rivera", phoneNumber: "15555551234"),
-            Favorite(name: "Morgan Blake", phoneNumber: "15557654321"),
-            Favorite(name: "Casey Kim", phoneNumber: "15558881234"),
-            Favorite(name: "Riley Walsh", phoneNumber: "15552229876"),
-            Favorite(name: "Quinn Foster", phoneNumber: "15553334455"),
-            Favorite(name: "Taylor Hayes", phoneNumber: "15554445566"),
-            Favorite(name: "Jamie Soto", phoneNumber: "15556667788"),
-            Favorite(name: "Drew Patel", phoneNumber: "15557778899"),
-            Favorite(name: "Family", phoneNumbers: ["15551234001", "15559876002"]),
+            // Ring 0 (inner, up to 4)
+            Favorite(name: "Jordan Reed", phoneNumber: "15551234001", ringIndex: 0),
+            Favorite(name: "Sam Chen", phoneNumber: "15559876002", ringIndex: 0),
+            Favorite(name: "Alex Rivera", phoneNumber: "15555551234", ringIndex: 0),
+            Favorite(name: "Morgan Blake", phoneNumber: "15557654321", ringIndex: 0),
+            // Ring 1 (next ring, capacity 8)
+            Favorite(name: "Casey Kim", phoneNumber: "15558881234", ringIndex: 1),
+            Favorite(name: "Riley Walsh", phoneNumber: "15552229876", ringIndex: 1),
+            Favorite(name: "Quinn Foster", phoneNumber: "15553334455", ringIndex: 1),
+            Favorite(name: "Taylor Hayes", phoneNumber: "15554445566", ringIndex: 1),
+            Favorite(name: "Jamie Soto", phoneNumber: "15556667788", ringIndex: 1),
+            Favorite(name: "Drew Patel", phoneNumber: "15557778899", ringIndex: 1),
+            Favorite(name: "Family", phoneNumbers: ["15551234001", "15559876002"], ringIndex: 1),
         ]
     }
 }

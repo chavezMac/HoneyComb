@@ -66,4 +66,16 @@ final class FavoritesStore: ObservableObject {
     func markAsRead(_ favorite: Favorite) {
         setUnreadCount(0, for: favorite.id)
     }
+
+    func setHexColor(_ hex: String?, for favoriteId: UUID) {
+        guard let i = favorites.firstIndex(where: { $0.id == favoriteId }) else { return }
+        favorites[i].hexColor = hex
+        save()
+    }
+
+    func setRingIndex(_ ring: Int, for favoriteId: UUID) {
+        guard let i = favorites.firstIndex(where: { $0.id == favoriteId }) else { return }
+        favorites[i].ringIndex = max(0, ring)
+        save()
+    }
 }

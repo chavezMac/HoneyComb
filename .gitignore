@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+docs/BRANCH_PROTECTION.md
+=======
 # Xcode
 xcuserdata/
 *.xcuserstate
@@ -16,3 +19,4 @@ DerivedData/
 
 # macOS
 .DS_Store
+>>>>>>> main
